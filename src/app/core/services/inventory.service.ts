@@ -37,4 +37,10 @@ export class InventoryService {
     ];
     this.productsItems$.next(mockProducts);
   }
+
+  deleteProduct(id: string): void {
+    const updatedProducts = this.productsItems$.value.filter(p => p.id !== id);
+    this.productsItems$.next(updatedProducts);
+  }
+
 }

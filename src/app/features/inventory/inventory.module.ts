@@ -6,6 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { InventoryRoutingModule } from './inventory-routing.module';
 import { InventoryListComponent } from './inventory-list/inventory-list.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -14,10 +17,12 @@ import { InventoryListComponent } from './inventory-list/inventory-list.componen
   ],
   imports: [
     CommonModule,
-    InventoryRoutingModule,
+    ReactiveFormsModule, // Required for [formControl]
     MatTableModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,  // Required for <mat-form-field>
+    MatInputModule       // Required for <input matInput>
   ]
 })
 export class InventoryModule { }
