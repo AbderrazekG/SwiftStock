@@ -9,20 +9,27 @@ import { InventoryListComponent } from './inventory-list/inventory-list.componen
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ProductFormComponent } from './product-form/product-form.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
   declarations: [
+    InventoryListComponent,
+    ProductFormComponent,
     InventoryListComponent
   ],
   imports: [
     CommonModule,
-    ReactiveFormsModule, // Required for [formControl]
+    ReactiveFormsModule,
     MatTableModule,
     MatIconModule,
     MatButtonModule,
-    MatFormFieldModule,  // Required for <mat-form-field>
-    MatInputModule       // Required for <input matInput>
+    MatFormFieldModule,  
+    MatInputModule,
+    MatDialogModule, 
+    MatSelectModule     
   ]
 })
 export class InventoryModule { }

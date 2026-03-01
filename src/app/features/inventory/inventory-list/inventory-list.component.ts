@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { InventoryService } from '../../../core/services/inventory.service';
-import { Product } from '../../../core/models/product.model';
-import { combineLatest } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable, combineLatest } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+
+import { Product } from '../../../core/models/product.model';
+import { InventoryService } from '../../../core/services/inventory.service';
+import { ProductFormComponent } from '../product-form/product-form.component';
 
 @Component({
   selector: 'app-inventory-list',
@@ -16,9 +18,16 @@ export class InventoryListComponent implements OnInit {
 
   searchControl = new FormControl('', { nonNullable: true });
 
-  products$: Observable<Product[]> = this.inventoryService.products$;
+  filteredProducts$: Observable<Product[]>;
 
-  constructor(private inventoryService: InventoryService) {
+  totalValue$: Observable<number>;
+  lowStockCount$: Observable<number>;
+  totalItems$: Observable<number>;
+
+  constructor(
+    private inventoryService: InventoryService,
+    private dialog: MatDialog,
+  ) {
     this.filteredProducts$ = combineLatest([
       this.inventoryService.products$,
       this.searchControl.valueChanges.pipe(startWith(''))
@@ -30,19 +39,42 @@ export class InventoryListComponent implements OnInit {
         )
       )
     );
-  }
+    this.totalValue$ = this.inventoryService.products$.pipe(
+      map(products => products.reduce((acc, p) => acc + (p.price * p.stockLevel), 0))
+    );
+    
+    this.lowStockCount$ = this.inventoryService.products$.pipe(
+      map(products => products.filter(p => p.stockLevel <= p.minThreshold).length)
+    );
 
-  filteredProducts$: Observable<Product[]>;
+    this.totalItems$ = this.inventoryService.products$.pipe(
+      map(products => products.length)
+    );
+  }
 
   ngOnInit(): void {}
 
-  onEdit(product: Product) {
-    console.log('Editing:', product.name);
+  openAddDialog(): void {
+    const dialogRef = this.dialog.open(ProductFormComponent, {
+      width: '450px',
+      disableClose: false 
+    });
+
+    dialogRef.afterClosed().subscribe((result: Product) => {
+      if (result) {
+        this.inventoryService.addProduct(result);
+      }
+    });
   }
 
   onDelete(id: string): void {
-  if (confirm('Are you sure you want to delete this product?')) {
-    this.inventoryService.deleteProduct(id);
+    const confirmDelete = confirm('Are you sure you want to delete this SKU?');
+    if (confirmDelete) {
+      this.inventoryService.deleteProduct(id);
+    }
   }
-}
+
+  onEdit(product: Product): void {
+    console.log('Edit functionality to be implemented:', product);
+  }
 }

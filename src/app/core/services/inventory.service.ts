@@ -43,4 +43,9 @@ export class InventoryService {
     this.productsItems$.next(updatedProducts);
   }
 
+  addProduct(product: Product): void {
+    const currentProducts = this.productsItems$.value;
+    const newProduct = { ...product, id: Math.random().toString(36).substr(2, 9) };
+    this.productsItems$.next([newProduct, ...currentProducts]);
+  }
 }

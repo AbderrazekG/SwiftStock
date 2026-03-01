@@ -1,0 +1,56 @@
+<h2 mat-dialog-title class="text-xl font-bold">Add New Product</h2>
+
+<mat-dialog-content [formGroup]="productForm" class="flex flex-col gap-4 py-4">
+  
+  <div class="flex gap-4">
+    <mat-form-field appearance="outline" class="flex-1">
+      <mat-label>Product Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g. MacBook Pro">
+      <mat-error *ngIf="productForm.get('name')?.hasError('required')">Name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="flex-1">
+      <mat-label>SKU</mat-label>
+      <input matInput formControlName="sku" placeholder="e.g. LAP-APP-MBP">
+      <mat-hint>Min 4 characters</mat-hint>
+    </mat-form-field>
+  </div>
+
+  <div class="flex gap-4">
+    <mat-form-field appearance="outline" class="flex-1">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="category">
+        <mat-option value="Electronics">Electronics</mat-option>
+        <mat-option value="Furniture">Furniture</mat-option>
+        <mat-option value="Office">Office</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="flex-1">
+      <mat-label>Price ($)</mat-label>
+      <input matInput type="number" formControlName="price">
+    </mat-form-field>
+  </div>
+
+  <div class="flex gap-4">
+    <mat-form-field appearance="outline" class="flex-1">
+      <mat-label>Initial Stock</mat-label>
+      <input matInput type="number" formControlName="stockLevel">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="flex-1">
+      <mat-label>Alert Threshold</mat-label>
+      <input matInput type="number" formControlName="minThreshold">
+    </mat-form-field>
+  </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="pb-4">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" 
+          [disabled]="productForm.invalid" 
+          (click)="onSubmit()">
+    Save Product
+  </button>
+</mat-dialog-actions>
